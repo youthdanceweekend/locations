@@ -21,6 +21,7 @@ f_w_coords = ['-72.73', '43.53']
 to_bos = 109
 to_nyc = 189.7
 to_chi = 761.4
+to_noatak = 3508.6
 
 
 def get_distance(lat_a, long_a, lat_b, long_b):
@@ -42,8 +43,8 @@ def calculate_distance(row):
     ydw_coords = weston_coords if row['year'] in range(2011, 2015) else f_w_coords
 
     return get_distance(
-        float(row["long"]), float(row["lat"]),
-        float(ydw_coords[0]), float(ydw_coords[1])
+        float(row["lat"]), float(row["long"]),
+        float(ydw_coords[1]), float(ydw_coords[0])
     )
 
 
@@ -115,9 +116,11 @@ def main():
 
     # FARTHER THAN CHARTS
     # ===================
+    make_farther_than_chart("Weston", 0, "farther_than_weston", data)
     make_farther_than_chart("NYC", to_nyc, "farther_than_nyc", data)
     make_farther_than_chart("Boston", to_bos, "farther_than_bos", data)
     make_farther_than_chart("Chicago", to_chi, "farther_than_chi", data)
+    make_farther_than_chart("Noatak National Preserve (Alaska)", to_noatak, "farther_than_noatak", data)
 
     # GEOJSON FILES
     # =============
@@ -128,12 +131,12 @@ def main():
             "type": "FeatureCollection",
         }
 
-        features = [row[1:4] for row in data[year].itertuples()]
+        features = [row[1:] for row in data[year].itertuples()]
         featureCollection["features"] = []
         # collections.Counter lets us cluster by zip code center
         for row, count in collections.Counter(features).iteritems():
             # If no lat, do not include in GeoJSON file
-            if pandas.isnull(row[1]):
+            if pandas.isnull(row[0]):
                 continue
             featureCollection['features'].append({
                 "type": "Feature",
@@ -143,6 +146,7 @@ def main():
                 },
                 "properties": {
                     "marker-symbol": count if count > 1 else None,
+                    "title": "Distance: {} miles".format(row[3])
                 }
             })
 
