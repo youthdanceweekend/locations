@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy
 import re
 import json
+import six
 
 from math import *
 
@@ -134,7 +135,7 @@ def main():
         features = [row[1:] for row in data[year].itertuples()]
         featureCollection["features"] = []
         # collections.Counter lets us cluster by zip code center
-        for row, count in collections.Counter(features).iteritems():
+        for row, count in six.iteritems(collections.Counter(features)):
             # If no lat, do not include in GeoJSON file
             if pandas.isnull(row[0]):
                 continue
