@@ -24,6 +24,8 @@ to_nyc = 189.7
 to_chi = 761.4
 to_noatak = 3508.6
 
+# The years we are running this script for (exclusive on the high end):
+YEARS = range(2009, 2016)
 
 def get_distance(lat_a, long_a, lat_b, long_b):
     "From http://zips.sourceforge.net/#dist_calc"
@@ -53,7 +55,7 @@ def make_farther_than_chart(place_name, distance, filename, data):
     # Make farther than city counts for each year:
     farther_than_pct = {}
 
-    for year in range(2009, 2015):
+    for year in YEARS:
         # Number of people who traveled farther than NY divided by the number of people we have distance data for:
         farther_than_city = float(data[year][(data[year]['distance']>distance)]['distance'].count())
         total = float(data[year]['distance'].count())
@@ -78,7 +80,7 @@ def main():
     # ==================
 
     data = {}
-    for year in range(2009, 2015):
+    for year in YEARS:
         # Read and process the CSV
         data[year] = pandas.read_csv("{}_long_lat.csv".format(year))
         # Add a column with the year label to the data:
@@ -96,7 +98,7 @@ def main():
     summaries = {}
 
     # Combine summaries for different years:
-    for year in range(2009, 2015):
+    for year in YEARS:
         summaries[year] = combined_data[(combined_data['year']==year)]['distance'].describe()
     summary_frame = pandas.concat(list(summaries.values()), axis=1, keys=range(2009, 2015))
 
@@ -110,8 +112,8 @@ def main():
     plt.title("2nd and 3rd Quartile Distance From YDW")
     plt.xlabel("Year")
     plt.ylabel("Distance (Miles)")
-    plt.axis([2009, 2014, 0, 400])
-    plt.xticks(range(2009, 2015), [str(x) for x in range(2009, 2015)])
+    plt.axis([YEARS[0], YEARS[-1], 0, 400])
+    plt.xticks(YEARS, [str(x) for x in YEARS])
     fig.savefig("results/averages.png")
     plt.close()
 
@@ -127,7 +129,7 @@ def main():
     # =============
 
     # Save coords to GeoJSON files:
-    for year in range(2009, 2015):
+    for year in YEARS:
         featureCollection = {
             "type": "FeatureCollection",
         }
