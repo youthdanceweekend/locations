@@ -68,8 +68,8 @@ def make_farther_than_chart(place_name, distance, filename, data):
     plt.title("Farther than {city}".format(city=place_name))
     plt.xlabel("Year")
     plt.ylabel("% of attendees from farther away than {city}".format(city=place_name))
-    plt.axis([2009, 2014, 0, 100])
-    plt.xticks(range(2009, 2015), [str(x) for x in range(2009, 2015)])
+    plt.axis([YEARS[0], YEARS[-1], 0, 100])
+    plt.xticks(YEARS, [str(x) for x in YEARS])
     fig.savefig("results/{filename}.png".format(filename=filename))
     plt.close()
 
@@ -100,7 +100,7 @@ def main():
     # Combine summaries for different years:
     for year in YEARS:
         summaries[year] = combined_data[(combined_data['year']==year)]['distance'].describe()
-    summary_frame = pandas.concat(list(summaries.values()), axis=1, keys=range(2009, 2015))
+    summary_frame = pandas.concat(list(summaries.values()), axis=1, keys=YEARS)
 
     # Save the summaries to an HTML document:
     with open("results/results.html", "w+") as f:
