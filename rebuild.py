@@ -146,7 +146,7 @@ def main():
                     "coordinates": row[0:2],
                 },
                 "properties": {
-                    "marker-symbol": count if count > 1 else None,
+                    "marker-symbol": count,
                     "title": "Distance: {} miles".format(row[3])
                 }
             })
