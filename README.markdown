@@ -5,7 +5,7 @@ This repository contains code and results for analyzing the location data of YDW
 attendees over time. To run `rebuild.py` yourself, you must have the following
 installed:
 
-* Python 2.7+ (Not tested with Python 3.x but it might work!)
+* Python 3.x+ (Not tested with Python 3.x but it might work!)
 * [pandas](http://pandas.pydata.org/)
 * [SciPy](http://scipy.org/)
 
