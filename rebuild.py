@@ -19,13 +19,17 @@ weston_coords = ['-72.80', '43.28']
 f_w_coords = ['-72.73', '43.53']
 
 # The distance from Weston VT to various cities
-to_bos = 109
-to_nyc = 189.7
-to_chi = 761.4
-to_noatak = 3508.6
+# Add a buffer of miles to ensure e.g., people *from* Boston don't get counted as
+# coming from farther than boston
+CITY_BUFFER = 10
+to_greenfield = 50 + CITY_BUFFER
+to_bos = 109 + CITY_BUFFER
+to_nyc = 189.7 + CITY_BUFFER
+to_chi = 761.4 + CITY_BUFFER
+to_noatak = 3508.6 + CITY_BUFFER
 
 # The years we are running this script for (exclusive on the high end):
-YEARS = range(2009, 2016)
+YEARS = range(2009, 2018)
 
 def get_distance(lat_a, long_a, lat_b, long_b):
     "From http://zips.sourceforge.net/#dist_calc"
@@ -107,9 +111,9 @@ def main():
         f.write(summary_frame.to_html())
 
     # Make a plot of the median and third quartile and save it to averages.png:
-    plot = summary_frame['50%':'75%'].T.plot()
+    plot = summary_frame['25%':'75%'].T.plot()
     fig = plot.get_figure()
-    plt.title("2nd and 3rd Quartile Distance From YDW")
+    plt.title("Quartiles Distance From YDW")
     plt.xlabel("Year")
     plt.ylabel("Distance (Miles)")
     plt.axis([YEARS[0], YEARS[-1], 0, 400])
@@ -123,6 +127,7 @@ def main():
     make_farther_than_chart("NYC", to_nyc, "farther_than_nyc", data)
     make_farther_than_chart("Boston", to_bos, "farther_than_bos", data)
     make_farther_than_chart("Chicago", to_chi, "farther_than_chi", data)
+    make_farther_than_chart("Greenfield", to_greenfield, "farther_than_greenfield", data)
     make_farther_than_chart("Noatak National Preserve (Alaska)", to_noatak, "farther_than_noatak", data)
 
     # GEOJSON FILES

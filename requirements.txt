@@ -3,3 +3,4 @@ numpy==1.9.1
 pandas==0.15.0
 scipy==0.18.1
 six==1.8.0
+zipcode==2.0.0
